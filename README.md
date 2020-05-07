@@ -1,15 +1,13 @@
 # Compress-Upload-CocoaLumberjack
 
-[![CI Status](https://img.shields.io/travis/jamesstout/Compress-Upload-CocoaLumberjack.svg?style=flat)](https://travis-ci.org/jamesstout/Compress-Upload-CocoaLumberjack)
-[![Version](https://img.shields.io/cocoapods/v/Compress-Upload-CocoaLumberjack.svg?style=flat)](https://cocoapods.org/pods/Compress-Upload-CocoaLumberjack)
-[![License](https://img.shields.io/cocoapods/l/Compress-Upload-CocoaLumberjack.svg?style=flat)](https://cocoapods.org/pods/Compress-Upload-CocoaLumberjack)
-[![Platform](https://img.shields.io/cocoapods/p/Compress-Upload-CocoaLumberjack.svg?style=flat)](https://cocoapods.org/pods/Compress-Upload-CocoaLumberjack)
 
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
+
+A Web server endpoint capabale of accepting `.gz` files.
 
 ## Installation
 
@@ -23,6 +21,9 @@ pod 'Compress-Upload-CocoaLumberjack'
 ## Author
 
 jamesstout, stoutyhk@gmail.com
+
+### Inspiration
+And a load of the code from [BackgroundUpload-CocoaLumberjack](https://github.com/pushd/BackgroundUpload-CocoaLumberjack).
 
 ## License
 

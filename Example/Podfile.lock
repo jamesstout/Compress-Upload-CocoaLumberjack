@@ -1,0 +1,29 @@
+PODS:
+  - CocoaLumberjack (3.6.1):
+    - CocoaLumberjack/Core (= 3.6.1)
+  - CocoaLumberjack/Core (3.6.1)
+  - Compress-Upload-CocoaLumberjack (0.1.0):
+    - CocoaLumberjack
+  - Expecta (1.0.6)
+
+DEPENDENCIES:
+  - Compress-Upload-CocoaLumberjack (from `../`)
+  - Expecta
+
+SPEC REPOS:
+  trunk:
+    - CocoaLumberjack
+    - Expecta
+
+EXTERNAL SOURCES:
+  Compress-Upload-CocoaLumberjack:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  CocoaLumberjack: b17ae15142558d08bbacf69775fa10c4abbebcc9
+  Compress-Upload-CocoaLumberjack: c0a662fd898f464bc6340f550946f30426f4a2bf
+  Expecta: 3b6bd90a64b9a1dcb0b70aa0e10a7f8f631667d5
+
+PODFILE CHECKSUM: 211bdcd8b916541dfb2b1e38b4c8b5d738804a41
+
+COCOAPODS: 1.9.1

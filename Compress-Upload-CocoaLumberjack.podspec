@@ -9,34 +9,28 @@
 Pod::Spec.new do |s|
   s.name             = 'Compress-Upload-CocoaLumberjack'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of Compress-Upload-CocoaLumberjack.'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
+  s.summary          = 'Remote logging via NSURLSession transfer to upload compressed CocoaLumberjack logs to an HTTP server.'
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+  A mashup of the example CompressingLogFileManager in CocoaLumberjack and
+  BackgroundUpload-CocoaLumberjack: https://github.com/pushd/BackgroundUpload-CocoaLumberjack.
+  Once the log file is compressed, it's uploaded to an HTTP server, the deleted.
                        DESC
 
   s.homepage         = 'https://github.com/jamesstout/Compress-Upload-CocoaLumberjack'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'jamesstout' => 'stoutyhk@gmail.com' }
   s.source           = { :git => 'https://github.com/jamesstout/Compress-Upload-CocoaLumberjack.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.social_media_url = 'https://twitter.com/stoutyhk'
 
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'Compress-Upload-CocoaLumberjack/Classes/**/*'
   
-  # s.resource_bundles = {
-  #   'Compress-Upload-CocoaLumberjack' => ['Compress-Upload-CocoaLumberjack/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.ios.deployment_target = '8.0'
+  
+  s.source_files = 'Compress-Upload-CocoaLumberjack/Classes/**/*'
+  s.public_header_files = 'Compress-Upload-CocoaLumberjack/Classes/**/*.h'
+  
+  s.dependency 'CocoaLumberjack'
 end

@@ -8,12 +8,55 @@
 
 #import "JCSAppDelegate.h"
 
+
+const DDLogLevel ddLogLevel = DDLogLevelVerbose;
+
 @implementation JCSAppDelegate
+
+@synthesize fileLogger, logFileManager;
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    // change the URL to your domain/endpoint
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://localhost:3000/log"]];
+    [request setHTTPMethod:@"POST"];
+    
+    logFileManager = [[CompressingAndUploadingLogFileManager alloc] initWithUploadRequest:request];
+    
+    fileLogger = [[DDFileLogger alloc] initWithLogFileManager:logFileManager];
+    
+    // set to 1 min and 1kB so they roll quickly
+    fileLogger.maximumFileSize  = 1024 * 100;  // 1 KB
+    fileLogger.rollingFrequency =   60 * 1;  // 1 Minute
+    
+    fileLogger.logFileManager.maximumNumberOfLogFiles = 4;
+    
+    [DDLog addLogger:[DDOSLogger sharedInstance]];
+    [DDLog addLogger:fileLogger];
+    
+    [NSTimer scheduledTimerWithTimeInterval:0.5
+                                     target:self
+                                   selector:@selector(writeLogMessages:)
+                                   userInfo:nil
+                                    repeats:YES];
+    
+    
     return YES;
+}
+
+- (void)writeLogMessages:(NSTimer *)aTimer
+{
+    DDLogVerbose(@"I like cheese");
+}
+
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
+{
+    DDLogVerbose(@"CompressingAndUploadingLogFileManager: handleEventsForBackgroundURLSession Appdel");
+    
+    if ([[self.logFileManager sessionIdentifier] isEqualToString:identifier]) {
+        [self.logFileManager handleEventsForBackgroundURLSession:completionHandler];
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

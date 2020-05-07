@@ -9,5 +9,7 @@
 @import UIKit;
 
 @interface JCSViewController : UIViewController
+@property (strong, nonatomic) IBOutlet UILabel *label;
+@property (strong, nonatomic) IBOutlet UITextView *tv;
 
 @end
