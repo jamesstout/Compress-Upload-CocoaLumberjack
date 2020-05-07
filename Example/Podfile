@@ -1,0 +1,14 @@
+use_frameworks!
+
+platform :ios, '8.0'
+
+target 'Compress-Upload-CocoaLumberjack_Example' do
+  pod 'Compress-Upload-CocoaLumberjack', :path => '../'
+
+  target 'Compress-Upload-CocoaLumberjack_Tests' do
+    inherit! :search_paths
+
+    pod 'Specta'
+    pod 'Expecta'
+  end
+end
