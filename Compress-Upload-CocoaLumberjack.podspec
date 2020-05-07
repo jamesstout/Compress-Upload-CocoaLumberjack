@@ -8,13 +8,13 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Compress-Upload-CocoaLumberjack'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'Remote logging via NSURLSession transfer to upload compressed CocoaLumberjack logs to an HTTP server.'
 
   s.description      = <<-DESC
-  A mashup of the example CompressingLogFileManager in CocoaLumberjack and
+  A mashup of the example CompressingLogFileManager in CocoaLumberjack and 
   BackgroundUpload-CocoaLumberjack: https://github.com/pushd/BackgroundUpload-CocoaLumberjack.
-  Once the log file is compressed, it's uploaded to an HTTP server, the deleted.
+  When the log file is rolled/archived, it's compressed, then uploaded to an HTTP server, and finally deleted.
                        DESC
 
   s.homepage         = 'https://github.com/jamesstout/Compress-Upload-CocoaLumberjack'

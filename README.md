@@ -1,5 +1,8 @@
 # Compress-Upload-CocoaLumberjack
 
+A mashup of the example [CompressingLogFileManager](https://github.com/CocoaLumberjack/CocoaLumberjack/tree/master/Demos/LogFileCompressor) in [CocoaLumberjack](https://github.com/CocoaLumberjack/CocoaLumberjack) and [BackgroundUpload-CocoaLumberjack](https://github.com/pushd/BackgroundUpload-CocoaLumberjack).
+
+When the log file is rolled/archived, it's compressed, then uploaded to an HTTP server, and finally deleted.
 
 ## Example
 
@@ -7,7 +10,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
-A Web server endpoint capabale of accepting `.gz` files.
+A Web server endpoint capable of accepting `.gz` files.
 
 ## Installation
 
