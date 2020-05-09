@@ -33,7 +33,7 @@
     BOOL isCompressing;
 }
 
-@property (assign, nonatomic) BOOL dontUpload;
+@property (assign, nonatomic) BOOL doUpload;
 
 - (id)initWithLogsDirectory:(NSString *)aLogsDirectory andUploadRequest:(NSURLRequest *)uploadRequest;
 - (id)initWithUploadRequest:(NSURLRequest *)uploadRequest;

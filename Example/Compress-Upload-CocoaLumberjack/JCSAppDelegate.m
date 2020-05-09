@@ -19,10 +19,12 @@ const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // change the URL to your domain/endpoint
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://localhost:3000/log"]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://www.hkwarnings.com/observatoryWarnings/logFile.php"]];
     [request setHTTPMethod:@"POST"];
     
     logFileManager = [[CompressingAndUploadingLogFileManager alloc] initWithUploadRequest:request];
+    
+    logFileManager.doUpload = YES;
     
     fileLogger = [[DDFileLogger alloc] initWithLogFileManager:logFileManager];
     
@@ -31,6 +33,8 @@ const DDLogLevel ddLogLevel = DDLogLevelVerbose;
     fileLogger.rollingFrequency =   60 * 1;  // 1 Minute
     
     fileLogger.logFileManager.maximumNumberOfLogFiles = 4;
+    
+    
     
     [DDLog addLogger:[DDOSLogger sharedInstance]];
     [DDLog addLogger:fileLogger];
@@ -48,6 +52,71 @@ const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 - (void)writeLogMessages:(NSTimer *)aTimer
 {
     DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+    DDLogVerbose(@"I like cheese");
+
 }
 
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler

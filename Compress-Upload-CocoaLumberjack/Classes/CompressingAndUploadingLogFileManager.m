@@ -53,7 +53,7 @@
 
 @implementation CompressingAndUploadingLogFileManager
 
-@synthesize isCompressing, dontUpload;
+@synthesize isCompressing, doUpload;
 
 - (id)initWithUploadRequest:(NSURLRequest *)uploadRequest
 {
@@ -68,7 +68,7 @@
         
         _uploadRequest = uploadRequest;
         _discretionary = YES;
-        dontUpload = NO;
+        doUpload = YES;
         [self setupSession];
         // Check for any files that need to be compressed.
         // But don't start right away.
@@ -144,7 +144,7 @@
 
 -(void)uploadOldCompressedLogFiles{
     
-    if(dontUpload == NO){
+    if(doUpload == NO){
         return;
     }
     
@@ -245,13 +245,12 @@
 }
 
 #pragma mark - compressionDidSucceed
-
 - (void)compressionDidSucceed:(DDLogFileInfo *)logFile
 {
     NSLogVerbose(@"CompressingAndUploadingLogFileManager: compressionDidSucceed: %@", logFile.fileName);
     
     // at this point we want to upload logFile
-    if(dontUpload == NO){
+    if(doUpload == YES){
         [self uploadArchivedFile:logFile];
     }
     self.isCompressing = NO;
