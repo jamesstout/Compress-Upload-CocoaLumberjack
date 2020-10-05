@@ -1,4 +1,4 @@
-platform :ios, '8.0'
+platform :ios, '9.0'
 
 target 'Compress-Upload-CocoaLumberjack_Example' do
   pod 'Compress-Upload-CocoaLumberjack', :path => '../'
@@ -16,11 +16,11 @@ post_install do |installer_representation|
     target.build_configurations.each do |config|
       config.build_settings['ENABLE_BITCODE'] = 'NO'
       config.build_settings['ONLY_ACTIVE_ARCH'] = 'NO'
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = 8.0
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = 9.0
       config.build_settings['DEBUG_INFORMATION_FORMAT'] = 'dwarf-with-dsym'
       
       if target.name == "CocoaLumberjack"
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = 8.0
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = 9.0
         config.build_settings['OTHER_CFLAGS'] ||= ['$(inherited)', '-Wno-strict-prototypes', '-Wno-deprecated-declarations', '-Wno-deprecated-implementations', '-Wno-implicit-retain-self']
         
       end
