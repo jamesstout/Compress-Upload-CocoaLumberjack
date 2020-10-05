@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Compress-Upload-CocoaLumberjack'
-  s.version          = '0.1.2'
+  s.version          = '0.1.3'
   s.summary          = 'Remote logging via NSURLSession transfer to upload compressed CocoaLumberjack logs to an HTTP server.'
 
   s.description      = <<-DESC
@@ -23,14 +23,14 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/jamesstout/Compress-Upload-CocoaLumberjack.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/stoutyhk'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
 
   s.source_files = 'Compress-Upload-CocoaLumberjack/Classes/**/*'
   
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
   
   s.source_files = 'Compress-Upload-CocoaLumberjack/Classes/**/*'
   s.public_header_files = 'Compress-Upload-CocoaLumberjack/Classes/**/*.h'
   
-  s.dependency 'CocoaLumberjack'
+  s.dependency 'CocoaLumberjack' , '~> 3.7.0'
 end
