@@ -278,33 +278,19 @@
 
 #pragma mark - didArchiveLogFile
 
-- (void)didArchiveLogFile:(NSString *)logFilePath
-{
-    NSLogVerbose(@"CompressingAndUploadingLogFileManager: didArchiveLogFile: %@", [logFilePath lastPathComponent]);
-    
-    // If all other log files have been compressed,
-    // then we can get started right away.
+- (void)didArchiveLogFile:(NSString *)logFilePath wasRolled:(BOOL)wasRolled {
+    NSLogVerbose(@"CompressingAndUploadingLogFileManager: didArchiveLogFile: %@ wasRolled: %@",
+                 [logFilePath lastPathComponent], (wasRolled ? @"YES" : @"NO"));
+
+    // If all other log files have been compressed, then we can get started right away.
     // Otherwise we should just wait for the current compression process to finish.
-    
+
     if (upToDate)
     {
         [self compressLogFile:[DDLogFileInfo logFileWithPath:logFilePath]];
     }
 }
 
-- (void)didRollAndArchiveLogFile:(NSString *)logFilePath
-{
-    NSLogVerbose(@"CompressingAndUploadingLogFileManager: didRollAndArchiveLogFile: %@", [logFilePath lastPathComponent]);
-    
-    // If all other log files have been compressed,
-    // then we can get started right away.
-    // Otherwise we should just wait for the current compression process to finish.
-    
-    if (upToDate)
-    {
-        [self compressLogFile:[DDLogFileInfo logFileWithPath:logFilePath]];
-    }
-}
 #pragma mark - compress file
 
 - (void)backgroundThread_CompressLogFile:(DDLogFileInfo *)logFile
