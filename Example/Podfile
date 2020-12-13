@@ -1,6 +1,9 @@
-platform :ios, '9.0'
+source 'https://cdn.cocoapods.org/'
+
 
 target 'Compress-Upload-CocoaLumberjack_Example' do
+
+  platform :ios, '9.0'
   pod 'Compress-Upload-CocoaLumberjack', :path => '../'
 
   target 'Compress-Upload-CocoaLumberjack_Tests' do
@@ -8,6 +11,12 @@ target 'Compress-Upload-CocoaLumberjack_Example' do
 
     pod 'Expecta'
   end
+end
+
+target 'Compress-Upload-CocoaLumberjack_Example-Mac' do
+  platform :osx, '10.10'
+  pod 'Compress-Upload-CocoaLumberjack', :path => '../'
+
 end
 
 post_install do |installer_representation|
@@ -18,9 +27,23 @@ post_install do |installer_representation|
       config.build_settings['ONLY_ACTIVE_ARCH'] = 'NO'
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = 9.0
       config.build_settings['DEBUG_INFORMATION_FORMAT'] = 'dwarf-with-dsym'
-      
+
+
+      if target.name == "Compress-Upload-CocoaLumberjack_Example"
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = 9.0
+        config.build_settings['OTHER_CFLAGS'] ||= ['$(inherited)', '-Wno-strict-prototypes', '-Wno-deprecated-declarations', '-Wno-deprecated-implementations', '-Wno-implicit-retain-self']
+
+      end
+
+      if target.name == "Compress-Upload-CocoaLumberjack_Example-Mac"
+        config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = 10.10
+        config.build_settings['OTHER_CFLAGS'] ||= ['$(inherited)', '-Wno-strict-prototypes', '-Wno-deprecated-declarations', '-Wno-deprecated-implementations', '-Wno-implicit-retain-self']
+
+      end
+
       if target.name == "CocoaLumberjack"
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = 9.0
+        config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = 10.10
         config.build_settings['OTHER_CFLAGS'] ||= ['$(inherited)', '-Wno-strict-prototypes', '-Wno-deprecated-declarations', '-Wno-deprecated-implementations', '-Wno-implicit-retain-self']
         
       end

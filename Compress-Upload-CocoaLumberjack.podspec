@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Compress-Upload-CocoaLumberjack'
-  s.version          = '0.1.4'
+  s.version          = '0.1.5'
   s.summary          = 'Remote logging via NSURLSession transfer to upload compressed CocoaLumberjack logs to an HTTP server.'
 
   s.description      = <<-DESC
@@ -24,11 +24,11 @@ Pod::Spec.new do |s|
   s.social_media_url = 'https://twitter.com/stoutyhk'
 
   s.ios.deployment_target = '9.0'
+  s.osx.deployment_target = '10.10'
 
-  s.source_files = 'Compress-Upload-CocoaLumberjack/Classes/**/*'
-  
-  s.ios.deployment_target = '9.0'
-  
+  s.cocoapods_version = '>= 1.4.0'
+  s.requires_arc   = true
+
   s.source_files = 'Compress-Upload-CocoaLumberjack/Classes/**/*'
   s.public_header_files = 'Compress-Upload-CocoaLumberjack/Classes/**/*.h'
   

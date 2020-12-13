@@ -8,7 +8,12 @@
 
 #import "CompressingAndUploadingLogFileManager.h"
 #import <zlib.h>
-#import <UIKit/UIKit.h>
+#if TARGET_OS_IOS
+    #import <UIKit/UIKit.h>
+#elif TARGET_OS_OSX
+    #import <AppKit/AppKit.h>
+#endif
+
 
 // We probably shouldn't be using DDLog() statements within the DDLog implementation.
 // But we still want to leave our log statements for any future debugging,
@@ -340,6 +345,18 @@
     }
     
     return unsortedLogFilePaths;
+}
+
+- (NSArray *)sortedLogFilePaths {
+    NSArray *sortedLogFileInfos = [self sortedLogFileInfosGZ];
+
+    NSMutableArray *sortedLogFilePaths = [NSMutableArray arrayWithCapacity:[sortedLogFileInfos count]];
+
+    for (DDLogFileInfo *logFileInfo in sortedLogFileInfos) {
+        [sortedLogFilePaths addObject:[logFileInfo filePath]];
+    }
+
+    return sortedLogFilePaths;
 }
 
 #pragma mark - compressionDidSucceed
@@ -720,10 +737,18 @@
 - (void)uploadLogFile:(NSString *)logFilePath
 {
     NSMutableURLRequest *request = [self.uploadRequest mutableCopy];
-    [request setValue:[logFilePath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]] forHTTPHeaderField:@"X-BackgroundUpload-File"];
+
     // added extra header to identify upload
-    [request setValue:[UIDevice.currentDevice.identifierForVendor.UUIDString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]] forHTTPHeaderField:@"X-BackgroundUpload-File-UUID"];
-    
+
+
+#if TARGET_OS_IOS
+    [request setValue:[UIDevice.currentDevice.identifierForVendor.UUIDString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] forHTTPHeaderField:@"X-BackgroundUpload-File-UUID"];
+#elif TARGET_OS_OSX
+    [request setValue:[[NSUUID new].UUIDString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] forHTTPHeaderField:@"X-BackgroundUpload-File-UUID"];
+#endif
+
+    [request setValue:[logFilePath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] forHTTPHeaderField:@"X-BackgroundUpload-File"];
+
     NSURLSessionTask *task = [self.session uploadTaskWithRequest:request fromFile:[NSURL fileURLWithPath:logFilePath]];
     NSLogVerbose(@"CompressingAndUploadingLogFileManager: started uploading: %@", [self filePathForTask:task]); // test decoding header
     task.taskDescription = logFilePath;
@@ -760,9 +785,9 @@
         backgroundConfiguration.timeoutIntervalForRequest = 10.0;
         backgroundConfiguration.timeoutIntervalForResource = 20.0;
         self.session = [NSURLSession sessionWithConfiguration:backgroundConfiguration delegate:self delegateQueue:nil];
-        
     };
-    
+
+#if TARGET_OS_IOS
     // on nsurlsessiond crashes, sessionWithConfiguration can block for a long time,
     // but from the background make sure we set up synhronously in didFinishLaunchingWithOptions
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground) {
@@ -770,11 +795,21 @@
     } else {
         dispatch_async([DDLog loggingQueue], block);
     }
+
+#elif TARGET_OS_OSX
+    if (NSApplication.sharedApplication.hidden == YES) {
+        dispatch_sync([DDLog loggingQueue], block);
+    } else {
+        dispatch_async([DDLog loggingQueue], block);
+    }
+#endif
+
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session
 {
     NSLogVerbose(@"URLSessionDidFinishEventsForBackgroundURLSession: session: %@", session);
+
 
     // ensure all deletes are complete before calling completion
     dispatch_async([DDLog loggingQueue], ^{
@@ -813,10 +848,11 @@
 
 - (void)uploadFilePath:(NSString *)filePath didCompleteWithError:(NSError *)error
 {
-    NSLogVerbose(@"CompressingAndUploadingLogFileManager: upload: %@ didCompleteWithError: %@", filePath, error);
-    
+
     dispatch_async([DDLog loggingQueue], ^{ @autoreleasepool {
         if (!error) {
+            NSLogVerbose(@"CompressingAndUploadingLogFileManager: upload: %@ didCompleteWithError: %@", filePath, error);
+
             NSError *deleteError;
             [self->fileManager removeItemAtPath:filePath error:&deleteError];
             if (deleteError) {
