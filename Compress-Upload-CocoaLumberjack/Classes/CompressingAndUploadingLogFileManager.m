@@ -35,6 +35,7 @@
 
 @property (strong, nonatomic) NSURLSession *session;
 @property (copy, nonatomic) void(^completionHandler)(void);
+@property (nonatomic, readwrite, strong) NSFileManager *fileManager;
 
 @end
 
@@ -53,7 +54,7 @@
 
 @implementation CompressingAndUploadingLogFileManager
 
-@synthesize isCompressing, doUpload;
+@synthesize isCompressing, doUpload, fileManager;
 
 - (id)initWithUploadRequest:(NSURLRequest *)uploadRequest
 {
@@ -69,6 +70,7 @@
         _uploadRequest = uploadRequest;
         _discretionary = YES;
         doUpload = YES;
+        fileManager = NSFileManager.defaultManager;
         [self setupSession];
         // Check for any files that need to be compressed.
         // But don't start right away.
@@ -214,7 +216,7 @@
 
 - (NSArray *)unsortedLogFilePathsGZ {
     NSString *logsDirectory = [self logsDirectory];
-    NSArray *fileNames = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:logsDirectory error:nil];
+    NSArray *fileNames = [[fileManager contentsOfDirectoryAtPath:logsDirectory error:nil];
     
     NSMutableArray *unsortedLogFilePaths = [NSMutableArray arrayWithCapacity:[fileNames count]];
     
@@ -325,7 +327,7 @@
     // device locked.  c.f. DDFileLogger.doesAppRunInBackground.
     NSString* protection = logFile.fileAttributes[NSFileProtectionKey];
     NSDictionary* attributes = protection == nil ? nil : @{NSFileProtectionKey: protection};
-    [[NSFileManager defaultManager] createFileAtPath:tempOutputFilePath contents:nil attributes:attributes];
+    [fileManager createFileAtPath:tempOutputFilePath contents:nil attributes:attributes];
 #endif
     
     // STEP 2 & 3
@@ -530,7 +532,7 @@
 
         NSLogError(@"Compression of %@ failed: %@", inputFilePath, error);
         error = nil;
-        BOOL ok = [[NSFileManager defaultManager] removeItemAtPath:tempOutputFilePath error:&error];
+        BOOL ok = [fileManager removeItemAtPath:tempOutputFilePath error:&error];
         if (!ok)
             NSLogError(@"Failed to clean up %@ after failed compression: %@", tempOutputFilePath, error);
         
@@ -547,7 +549,7 @@
         // It will be replaced with the new compressed version.
 
         error = nil;
-        BOOL ok = [[NSFileManager defaultManager] removeItemAtPath:inputFilePath error:&error];
+        BOOL ok = [fileManager removeItemAtPath:inputFilePath error:&error];
         if (!ok)
             NSLogWarn(@"Warning: failed to remove original file %@ after compression: %@", inputFilePath, error);
         
@@ -599,10 +601,18 @@
                 }
                 
                 for (NSString *filePath in filesToUpload) {
-                    if ([[NSFileManager defaultManager] isReadableFileAtPath:filePath]) {
-                        [self uploadLogFile:filePath];
-                    } else {
-                        NSAssert(NO, @"file that came from log file infos should be readable");
+                    NSLogVerbose(@"filePath : %@", filePath);
+                    if ([self->fileManager fileExistsAtPath:filePath]) {
+                        NSLogVerbose(@"filePath exists : %@", filePath);
+                        if ([self->fileManager isReadableFileAtPath:filePath]) {
+                            NSLogVerbose(@"filePath isReadable : %@", filePath);
+                            [self uploadLogFile:filePath];
+                        } else {
+                            NSAssert(NO, @"file that came from log file infos should be readable");
+                        }
+                    }
+                    else{
+                        NSLogVerbose(@"filePath does not exist at path : %@", filePath);
                     }
                 }
             }});
@@ -712,7 +722,7 @@
     dispatch_async([DDLog loggingQueue], ^{ @autoreleasepool {
         if (!error) {
             NSError *deleteError;
-            [[NSFileManager defaultManager] removeItemAtPath:filePath error:&deleteError];
+            [fileManager removeItemAtPath:filePath error:&deleteError];
             if (deleteError) {
                 NSLogError(@"CompressingAndUploadingLogFileManager: Error deleting file %@: %@", filePath, deleteError);
             }
