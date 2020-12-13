@@ -149,17 +149,63 @@
     if(doUpload == NO){
         return;
     }
-    
-    NSArray *unsortedLogFileInfos = [self unsortedLogFileInfosGZ];
-    NSLogVerbose(@"CompressingAndUploadingLogFileManager: unsortedLogFileInfos: %@", unsortedLogFileInfos);
-    
-    for (DDLogFileInfo *fileInfo in unsortedLogFileInfos) {
-        NSLogVerbose(@"CompressingAndUploadingLogFileManager: fileInfo: %@", fileInfo);
 
-        if (fileInfo.isArchived) {
-            NSLogVerbose(@"is Archived, uploading...");
+    NSArray *sortedLogFileInfos = [self sortedLogFileInfosGZ];
 
-            [self uploadArchivedFile:fileInfo];
+    NSLogVerbose(@"CompressingAndUploadingLogFileManager: sortedLogFileInfos: %@", sortedLogFileInfos);
+
+    NSUInteger firstIndexToDelete = NSNotFound;
+
+    const unsigned long long diskQuota = self.logFilesDiskQuota;
+    const NSUInteger maxNumLogFiles = self.maximumNumberOfLogFiles;
+
+    if (diskQuota) {
+        unsigned long long used = 0;
+
+        for (NSUInteger i = 0; i < sortedLogFileInfos.count; i++) {
+            DDLogFileInfo *info = sortedLogFileInfos[i];
+            used += info.fileSize;
+
+            if (used > diskQuota) {
+                firstIndexToDelete = i;
+                break;
+            }
+        }
+    }
+
+    if (maxNumLogFiles) {
+        if (firstIndexToDelete == NSNotFound) {
+            firstIndexToDelete = maxNumLogFiles;
+        } else {
+            firstIndexToDelete = MIN(firstIndexToDelete, maxNumLogFiles);
+        }
+    }
+
+    if (firstIndexToDelete == 0) {
+        // Do we consider the first file?
+        // We are only supposed to be deleting archived files.
+        // In most cases, the first file is likely the log file that is currently being written to.
+        // So in most cases, we do not want to consider this file for deletion.
+
+        if (sortedLogFileInfos.count > 0) {
+            DDLogFileInfo *logFileInfo = sortedLogFileInfos[0];
+
+            if (!logFileInfo.isArchived) {
+                // Don't delete active file.
+                ++firstIndexToDelete;
+            }
+        }
+    }
+
+    if (firstIndexToDelete != NSNotFound) {
+        // removing all log files starting with firstIndexToDelete
+
+        for (NSUInteger i = firstIndexToDelete; i < sortedLogFileInfos.count; i++) {
+            DDLogFileInfo *logFileInfo = sortedLogFileInfos[i];
+
+            NSLogInfo(@"CompressingAndUploadingLogFileManager: uploading [%lu] of [%lu] : logFileInfo.fileName: %@", (unsigned long)i, (unsigned long)sortedLogFileInfos.count, logFileInfo.fileName);
+
+            [self uploadArchivedFile:logFileInfo];
         }
     }
 
@@ -214,9 +260,59 @@
     return unsortedLogFileInfos;
 }
 
+
+- (NSArray *)sortedLogFileInfosGZ {
+    return [[self unsortedLogFileInfosGZ] sortedArrayUsingComparator:^NSComparisonResult(DDLogFileInfo *obj1,
+                                                                                       DDLogFileInfo *obj2) {
+        NSDate *date1 = [NSDate new];
+        NSDate *date2 = [NSDate new];
+
+        NSArray<NSString *> *arrayComponent = [[obj1 fileName] componentsSeparatedByString:@" "];
+        if (arrayComponent.count > 0) {
+            NSString *stringDate = arrayComponent.lastObject;
+            stringDate = [stringDate stringByReplacingOccurrencesOfString:@".log" withString:@""];
+#if TARGET_IPHONE_SIMULATOR
+            // This is only used on the iPhone simulator for backward compatibility reason.
+            stringDate = [stringDate stringByReplacingOccurrencesOfString:@".archived" withString:@""];
+#endif
+            date1 =  [[self logFileDateFormatter] dateFromString:stringDate] ?: [obj1 creationDate];
+        }
+
+        arrayComponent = [[obj2 fileName] componentsSeparatedByString:@" "];
+        if (arrayComponent.count > 0) {
+            NSString *stringDate = arrayComponent.lastObject;
+            stringDate = [stringDate stringByReplacingOccurrencesOfString:@".log" withString:@""];
+#if TARGET_IPHONE_SIMULATOR
+            // This is only used on the iPhone simulator for backward compatibility reason.
+            stringDate = [stringDate stringByReplacingOccurrencesOfString:@".archived" withString:@""];
+#endif
+            date2 = [[self logFileDateFormatter] dateFromString:stringDate] ?: [obj2 creationDate];
+        }
+
+        return [date2 compare:date1 ?: [NSDate new]];
+    }];
+
+}
+
+- (NSDateFormatter *)logFileDateFormatter {
+
+    static NSDateFormatter *_fileDateFormatter = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _fileDateFormatter = [[NSDateFormatter alloc] init];
+        [_fileDateFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
+        [_fileDateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+        [_fileDateFormatter setDateFormat: @"yyyy'-'MM'-'dd'--'HH'-'mm'-'ss'-'SSS'"];
+    });
+
+
+    return _fileDateFormatter;
+
+}
+
 - (NSArray *)unsortedLogFilePathsGZ {
     NSString *logsDirectory = [self logsDirectory];
-    NSArray *fileNames = [[fileManager contentsOfDirectoryAtPath:logsDirectory error:nil];
+    NSArray *fileNames = [fileManager contentsOfDirectoryAtPath:logsDirectory error:nil];
     
     NSMutableArray *unsortedLogFilePaths = [NSMutableArray arrayWithCapacity:[fileNames count]];
     
@@ -722,7 +818,7 @@
     dispatch_async([DDLog loggingQueue], ^{ @autoreleasepool {
         if (!error) {
             NSError *deleteError;
-            [fileManager removeItemAtPath:filePath error:&deleteError];
+            [self->fileManager removeItemAtPath:filePath error:&deleteError];
             if (deleteError) {
                 NSLogError(@"CompressingAndUploadingLogFileManager: Error deleting file %@: %@", filePath, deleteError);
             }
