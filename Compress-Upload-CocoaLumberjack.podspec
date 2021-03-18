@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Compress-Upload-CocoaLumberjack'
-  s.version          = '0.1.5'
+  s.version          = '0.1.6'
   s.summary          = 'Remote logging via NSURLSession transfer to upload compressed CocoaLumberjack logs to an HTTP server.'
 
   s.description      = <<-DESC
