@@ -24,7 +24,7 @@ let package = Package(
         .target(
             name: "Compress-Upload-CocoaLumberjack",
             dependencies: ["CocoaLumberjack"],
-            path: "Classes",
+            path: "/Classes",
             publicHeadersPath: "."),
     ]
 )
