@@ -749,6 +749,12 @@
 
     [request setValue:[logFilePath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] forHTTPHeaderField:@"X-BackgroundUpload-File"];
 
+    // double check file exists
+    if ([fileManager fileExistsAtPath:logFilePath] == NO) {
+        NSLogError(@"file does not exist at path : %@", logFilePath);
+        return;
+    }
+
     NSURLSessionTask *task = [self.session uploadTaskWithRequest:request fromFile:[NSURL fileURLWithPath:logFilePath]];
     NSLogVerbose(@"CompressingAndUploadingLogFileManager: started uploading: %@", [self filePathForTask:task]); // test decoding header
     task.taskDescription = logFilePath;
