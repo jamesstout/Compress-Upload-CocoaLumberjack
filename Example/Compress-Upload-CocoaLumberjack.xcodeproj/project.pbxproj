@@ -312,7 +312,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = JCS;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = jamesstout;
 				TargetAttributes = {
 					1A73F9F32586683E00BAF253 = {
@@ -545,6 +545,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "Compress-Upload-CocoaLumberjack_Example-Mac/Compress_Upload_CocoaLumberjack_Example_Mac.entitlements";
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -575,6 +576,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "Compress-Upload-CocoaLumberjack_Example-Mac/Compress_Upload_CocoaLumberjack_Example_Mac.entitlements";
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
