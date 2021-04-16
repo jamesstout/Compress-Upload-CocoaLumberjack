@@ -1,8 +1,8 @@
 PODS:
-  - CocoaLumberjack (3.7.0):
-    - CocoaLumberjack/Core (= 3.7.0)
-  - CocoaLumberjack/Core (3.7.0)
-  - Compress-Upload-CocoaLumberjack (0.1.5):
+  - CocoaLumberjack (3.7.2):
+    - CocoaLumberjack/Core (= 3.7.2)
+  - CocoaLumberjack/Core (3.7.2)
+  - Compress-Upload-CocoaLumberjack (0.1.7):
     - CocoaLumberjack (~> 3.7.0)
   - Expecta (1.0.6)
 
@@ -20,8 +20,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CocoaLumberjack: e8955b9d337ac307103b0a34fd141c32f27e53c5
-  Compress-Upload-CocoaLumberjack: c0eba23804ac871469b21138d3b45f0daf660d96
+  CocoaLumberjack: b7e05132ff94f6ae4dfa9d5bce9141893a21d9da
+  Compress-Upload-CocoaLumberjack: 200ef44367eb17af70d348105556b9d15514496e
   Expecta: 3b6bd90a64b9a1dcb0b70aa0e10a7f8f631667d5
 
 PODFILE CHECKSUM: 353f27eeb52da3b5371f8f1faf4b996b78de5baf
